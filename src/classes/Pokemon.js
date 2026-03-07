@@ -1,7 +1,7 @@
 import { sentenceCase } from "../tools/helper.js";
 
 export class Pokemon {
-  constructor(name, data) {
+  constructor(name, data, moveset) {
     this.name = name;
     this.primaryType = data.primaryType;
     this.secondaryType = data.secondaryType;
@@ -11,6 +11,10 @@ export class Pokemon {
     this.spAttack = data.spAttack;
     this.spDef = data.spDefense;
     this.speed = data.speed;
+    this.move1 = moveset[0].bind(this);
+    this.move2 = moveset[1].bind(this);
+    this.move3 = moveset[2].bind(this);
+    this.move4 = moveset[3].bind(this);
   }
 
   showStats() {

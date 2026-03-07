@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises"
 import { Pokemon } from "../classes/Pokemon.js"
+import { moveFuncs } from "../moves.js"
 
 async function queryPokeAPI(name) {
   const URL = "https://pokeapi.co/api/v2/pokemon"
@@ -58,20 +59,25 @@ function getTypes(typeData) {
 
 async function getMoves(name) {
   const contents = await readFile("./src/data/movesets.json", 'utf-8');
-  const allMoves = JSON.parse(contents);
-  return {"moves": allMoves[name]};
+  const moveNames = JSON.parse(contents);
+  const moveset = [];
+   
+  for (let move of moveNames[name]) {
+    moveset.push(moveFuncs.get(move));
+  }
+  return moveset;
 }
 
 async function getPokeData(name) {
   const allData = await queryPokeAPI(name);
   const types = getTypes(allData.types);
   const stats = getStats(allData.stats);
-  const moves = await getMoves(name);
-  const pokeData = {name, ...types, ...stats, ...moves};
+  const pokeData = {name, ...types, ...stats};
   return pokeData;
 }
 
 export async function getPokemon(name) {
     const pokeData = await getPokeData(name);
-    return new Pokemon(name, pokeData);
+    const moveset = await getMoves(name);
+    return new Pokemon(name, pokeData, moveset);
 }
