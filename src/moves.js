@@ -1,6 +1,9 @@
 export const moveFuncs = new Map();
 
-function curse() { console.log(`${this.name} used curse!`); }
+function curse(target) { 
+    console.log(`${this.name} used curse! Did 20 dmg to ${target.name}!`);
+    target.currentHp -= 20;
+}
 moveFuncs.set("curse", curse);
 
 function bodySlam() { console.log(`${this.name} used body slam!`); }
@@ -12,7 +15,10 @@ moveFuncs.set("rest", rest);
 function earthquake() { console.log(`${this.name} used earthquake!`); }
 moveFuncs.set("earthquake", earthquake);
 
-function shadowBall() { console.log(`${this.name} used shadow ball!`); }
+function shadowBall(target) { 
+    console.log(`${this.name} used shadow ball! Did 25 dmg to ${target.name}!`);
+    target.currentHp -= 25;
+}
 moveFuncs.set("shadow ball", shadowBall);
 
 function sludgeWave() { console.log(`${this.name} used sludge wave!`); }
