@@ -1,3 +1,6 @@
+import { typeMultiplier } from "./tools/battleLogic.js";
+import { sentenceCase } from "./tools/helper.js";
+
 export const moveFuncs = new Map();
 
 function curse(target) { 
@@ -12,12 +15,23 @@ moveFuncs.set("body slam", bodySlam);
 function rest() { console.log(`${this.name} used rest!`); }
 moveFuncs.set("rest", rest);
 
-function earthquake() { console.log(`${this.name} used earthquake!`); }
+function earthquake(target, typeInteractions) { 
+    const power = 100;
+    const type = "ground";
+    const category = "physical";
+    const damage = power * typeMultiplier(type, target.primaryType, typeInteractions);
+    console.log(`${sentenceCase(this.name)} used Earthquake! Did ${damage} to ${sentenceCase(target.name)}!`);
+    target.currentHp -= damage;
+}
 moveFuncs.set("earthquake", earthquake);
 
-function shadowBall(target) { 
-    console.log(`${this.name} used shadow ball! Did 25 dmg to ${target.name}!`);
-    target.currentHp -= 25;
+function shadowBall(target, typeInteractions) {
+    const power = 80;
+    const type = "ghost";
+    const category = "special"; 
+    const damage = power * typeMultiplier(type, target.primaryType, typeInteractions);
+    console.log(`${sentenceCase(this.name)} used Shadow Ball! Did ${damage} damage to ${sentenceCase(target.name)}!`);
+    target.currentHp -= damage;
 }
 moveFuncs.set("shadow ball", shadowBall);
 

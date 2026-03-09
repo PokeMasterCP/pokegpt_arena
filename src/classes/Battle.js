@@ -1,11 +1,12 @@
 import { sentenceCase } from "../tools/helper.js";
 
 export class Battle {
-    constructor(pokemon1, pokemon2) {
+    constructor(pokemon1, pokemon2, typeInteractions) {
         this.turn = 1;
         this.playerOne = pokemon1;
         this.playerTwo = pokemon2;
         this.winner = null;
+        this.typeInteractions = typeInteractions;
     }
 
     findTurnOrder() {
@@ -31,9 +32,9 @@ export class Battle {
 
     takeTurn(first, second) {
         console.log(`\nTurn: ${this.turn}`);
-        first.move1(second);
+        first.move1(second, this.typeInteractions);
         if (second.currentHp > 0) {
-            second.move1(first);
+            second.move4(first, this.typeInteractions);
         }
 
         this.afterTurnReport();
@@ -55,10 +56,6 @@ export class Battle {
         console.log(`${sentenceCase(this.playerTwo.name)} has ${this.playerTwo.currentHp} hp left.`)
         this.findTurnOrder();
     }
-
-
-
-
 }
 
 

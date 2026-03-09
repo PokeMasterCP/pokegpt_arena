@@ -1,5 +1,3 @@
-function getTurnOrder(pokemon1, pokemon2) {
-    if (pokemon1.speed > pokemon2.speed) {
-        return
-    }
+export function typeMultiplier(moveType, targetType, typeInteractions) {
+    return typeInteractions[moveType][targetType] ?? 1;
 }

@@ -76,6 +76,11 @@ async function getPokeData(name) {
   return pokeData;
 }
 
+export async function getTypeInteractions() {
+  const contents = await readFile("./src/data/typeInteractions.json");
+  return JSON.parse(contents);
+}
+
 export async function getPokemon(name) {
     const pokeData = await getPokeData(name);
     const moveset = await getMoves(name);
