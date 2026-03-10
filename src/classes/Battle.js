@@ -51,9 +51,8 @@ export class Battle {
             return;
         }
 
+        console.log(`${sentenceCase(this.playerOne.name)}: ${this.playerOne.currentHp}/${this.playerOne.hp} || ${sentenceCase(this.playerTwo.name)}: ${this.playerTwo.currentHp}/${this.playerTwo.hp}`);
         this.turn++;
-        console.log(`${sentenceCase(this.playerOne.name)} has ${this.playerOne.currentHp} hp left.`)
-        console.log(`${sentenceCase(this.playerTwo.name)} has ${this.playerTwo.currentHp} hp left.`)
         this.findTurnOrder();
     }
 }

@@ -10,7 +10,7 @@ export class Pokemon {
     this.attack = data.attack;
     this.defense = data.defense;
     this.spAttack = data.spAttack;
-    this.spDef = data.spDefense;
+    this.spDefense = data.spDefense;
     this.speed = data.speed;
    
     this.currentHp = this.hp;
