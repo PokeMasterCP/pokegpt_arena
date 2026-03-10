@@ -53,7 +53,7 @@ function damageReport(moveName, typeMultiple, criticalMultiple, damage, user, ta
     }
 
     if (typeMultiple < 1) {
-        console.log(`${userName} used ${moveName} but it was resisted! Dealt ${damage} to ${targetName}`);
+        console.log(`${userName} used ${moveName} but it was resisted! Dealt ${damage} damage to ${targetName}`);
         return;
     }
 
@@ -63,7 +63,7 @@ function damageReport(moveName, typeMultiple, criticalMultiple, damage, user, ta
 
 }
 
-export function damagePhase(typeInteractions, moveName, movePower, moveType, moveCategory, user, target) {
+export function damagePhase(typeInteractions, moveName, movePower, moveType, moveCategory, user, target, healing=false) {
     let typeMultiple = getTypeMultiplier(moveType, target.primaryType, typeInteractions);
     if (target.secondaryType) {
         typeMultiple *= getTypeMultiplier(moveType, target.secondaryType, typeInteractions);
@@ -73,8 +73,24 @@ export function damagePhase(typeInteractions, moveName, movePower, moveType, mov
     const randomMultiple = getRandomMultiplier();
     const criticalMultiple = getCriticalMultiplier();
     const statMultiple = getStatMultiplier(moveCategory, user, target);
-    
-    const damage = Math.floor(((( 22 * movePower * statMultiple) / 50) + 2) * criticalMultiple * randomMultiple * stabMultiple * typeMultiple);
+   
+    // The damage formula use 22 since levels are set to 50
+    let damage = Math.floor((22 * movePower * statMultiple) / 50) + 2;
+    damage = Math.floor(damage * criticalMultiple);
+    damage = Math.floor(damage * randomMultiple);
+    damage = Math.floor(damage * stabMultiple);
+    damage = Math.floor(damage * typeMultiple);
     target.currentHp -= damage;
+
     damageReport(moveName, typeMultiple, criticalMultiple, damage, user, target);
+    if (healing) {
+        if ( (user.currentHp + Math.floor(damage / 2)) > user.hp ) {
+            user.currentHp = user.hp;
+            console.log(`${sentenceCase(user.name)} has healed to full HP!`);
+        } else {
+            const healAmount = Math.floor(damage / 2);
+            user.currentHp += healAmount;
+            console.log(`${sentenceCase(user.name)} has healed ${healAmount} HP!`);
+        }
+    }
 }

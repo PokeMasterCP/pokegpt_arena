@@ -81,8 +81,17 @@ export async function getTypeInteractions() {
   return JSON.parse(contents);
 }
 
-export async function getPokemon(name) {
-    const pokeData = await getPokeData(name);
-    const moveset = await getMoves(name);
-    return new Pokemon(name, pokeData, moveset);
+export async function choosePokemon(playerOnePick, playerTwoPick) {
+  const rawContent = await readFile("./src/data/movesets.json", "utf-8");
+  const pokemonMap = new Map(Object.entries(JSON.parse(rawContent)));
+
+  const playerOneMoves = pokemonMap.get(playerOnePick).map(move => moveFuncs.get(move));
+  const playerOneData = await getPokeData(playerOnePick);
+  const playerOne = new Pokemon(playerOnePick, playerOneData, playerOneMoves);
+
+  const playerTwoMoves = pokemonMap.get(playerTwoPick).map(move => moveFuncs.get(move));
+  const playerTwoData = await getPokeData(playerTwoPick);
+  const playerTwo = new Pokemon(playerTwoPick, playerTwoData, playerTwoMoves);
+
+  return [playerOne, playerTwo];
 }

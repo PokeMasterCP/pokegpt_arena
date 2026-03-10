@@ -1,11 +1,11 @@
 {
-    "snorlax": ["curse", "body slam", "rest", "earthquake"],
+    "snorlax": ["crunch", "body slam", "zen headbutt", "earthquake"],
     "gengar": ["shadow ball", "sludge wave", "focus blast", "thunder"],
     "nidoking": ["sludge wave", "earth power", "ice beam", "fire blast"],
     "charizard": ["flamethrower", "focus blast", "solar beam", "roost"],
-    "blastoise": ["scald", "toxic", "ice beam", "aura sphere"],
+    "blastoise": ["scald", "dragon pulse", "ice beam", "aura sphere"],
     "venusaur": ["sludge bomb", "giga drain", "hidden power fire", "growth"],
-    "dragonite": ["dragon dance", "earthquake", "extreme speed", "dragon claw"],
+    "dragonite": ["dragon dance", "earthquake", "giga impact", "dragon claw"],
     "alakazam": ["psychic", "focus blast", "shadow ball", "recover"],
     "jolteon": ["thunderbolt", "alluring voice", "hyper beam", "shadow ball"],
     "pidgeot": ["roost", "hurricane", "hidden power fire", "hyper beam"]

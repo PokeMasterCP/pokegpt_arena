@@ -1,18 +1,57 @@
 import { damagePhase } from "./tools/battleLogic.js";
+import { sentenceCase } from "./tools/helper.js";
 
 export const moveFuncs = new Map();
 
-function curse(target) { 
-    console.log(`${this.name} used curse! Did 20 dmg to ${target.name}!`);
-    target.currentHp -= 20;
+function crunch(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "dark";
+    const moveCategory = "physical";
+    damagePhase(typeInteractions, "Crunch", movePower, moveType, moveCategory, this, target); 
 }
-moveFuncs.set("curse", curse);
+moveFuncs.set("crunch", crunch);
 
-function bodySlam() { console.log(`${this.name} used body slam!`); }
+function bodySlam(target, typeInteractions) {
+    const movePower = 85;
+    const moveType = "normal";
+    const moveCategory = "physical";
+    damagePhase(typeInteractions, "Body Slam", movePower, moveType, moveCategory, this, target); 
+}
 moveFuncs.set("body slam", bodySlam);
 
-function rest() { console.log(`${this.name} used rest!`); }
-moveFuncs.set("rest", rest);
+function gigaImpact(target, typeInteractions) {
+    const movePower = 150;
+    const moveType = "normal";
+    const moveCategory = "physical";
+    damagePhase(typeInteractions, "Giga Impact", movePower, moveType, moveCategory, this, target);
+    this.resting++;
+}
+moveFuncs.set("giga impact", gigaImpact);
+
+function hyperBeam(target, typeInteractions) {
+    const movePower = 150;
+    const moveType = "normal";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Hyper Beam", movePower, moveType, moveCategory, this, target);
+    this.resting++;
+}
+moveFuncs.set("hyper beam", hyperBeam);
+
+function zenHeadbutt(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "psychic";
+    const moveCategory = "physical";
+    damagePhase(typeInteractions, "Zen Headbutt", movePower, moveType, moveCategory, this, target); 
+}
+moveFuncs.set("zen headbutt", zenHeadbutt);
+
+function psychic(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "psychic";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Psychic", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("psychic", psychic);
 
 function earthquake(target, typeInteractions) { 
     const movePower = 100;
@@ -22,6 +61,14 @@ function earthquake(target, typeInteractions) {
 }
 moveFuncs.set("earthquake", earthquake);
 
+function earthPower(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "ground";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Earth Power", movePower, moveType, moveCategory, this, target); 
+}
+moveFuncs.set("earth power", earthPower);
+
 function shadowBall(target, typeInteractions) {
     const movePower = 80;
     const moveType = "ghost";
@@ -30,77 +77,181 @@ function shadowBall(target, typeInteractions) {
 }
 moveFuncs.set("shadow ball", shadowBall);
 
-function sludgeWave() { console.log(`${this.name} used sludge wave!`); }
+function sludgeWave(target, typeInteractions) {
+    const movePower = 95;
+    const moveType = "poison";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Sludge Wave", movePower, moveType, moveCategory, this, target); 
+}
 moveFuncs.set("sludge wave", sludgeWave);
 
-function focusBlast() { console.log(`${this.name} used focus blast!`); }
-moveFuncs.set("focus blast", focusBlast);
-
-function thunder() { console.log(`${this.name} used thunder!`); }
-moveFuncs.set("thunder", thunder);
-
-function earthPower() { console.log(`${this.name} used earth power!`); }
-moveFuncs.set("earth power", earthPower);
-
-function iceBeam() { console.log(`${this.name} used ice beam!`); }
-moveFuncs.set("ice beam", iceBeam);
-
-function fireBlast() { console.log(`${this.name} used fire blast!`); }
-moveFuncs.set("fire blast", fireBlast);
-
-function flamethrower() { console.log(`${this.name} used flamethrower!`); }
-moveFuncs.set("flamethrower", flamethrower);
-
-function solarBeam() { console.log(`${this.name} used solar beam!`); }
-moveFuncs.set("solar beam", solarBeam);
-
-function roost() { console.log(`${this.name} used roost!`); }
-moveFuncs.set("roost", roost);
-
-function scald() { console.log(`${this.name} used scald!`); }
-moveFuncs.set("scald", scald);
-
-function toxic() { console.log(`${this.name} used toxic!`); }
-moveFuncs.set("toxic", toxic);
-
-function auraSphere() { console.log(`${this.name} used aura sphere!`); }
-moveFuncs.set("aura sphere", auraSphere);
-
-function sludgeBomb() { console.log(`${this.name} used sludge bomb!`); }
+function sludgeBomb(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "poison";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Sludge Bomb", movePower, moveType, moveCategory, this, target);
+}
 moveFuncs.set("sludge bomb", sludgeBomb);
 
-function gigaDrain() { console.log(`${this.name} used giga drain!`); }
-moveFuncs.set("giga drain", gigaDrain);
+function focusBlast(target, typeInteractions) {
+    const movePower = 120;
+    const moveType = "fighting";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Focus Blast", movePower, moveType, moveCategory, this, target); 
+}
+moveFuncs.set("focus blast", focusBlast);
 
-function hiddenPowerFire() { console.log(`${this.name} used hidden power fire!`); }
-moveFuncs.set("hidden power fire", hiddenPowerFire);
+function auraSphere(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "fighting";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Aura Sphere", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("aura sphere", auraSphere);
 
-function growth() { console.log(`${this.name} used growth!`); }
-moveFuncs.set("growth", growth);
+function thunder(target, typeInteractions) {
+    const movePower = 110;
+    const moveType = "electric";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Thunder", movePower, moveType, moveCategory, this, target); 
+}
+moveFuncs.set("thunder", thunder);
 
-function dragonDance() { console.log(`${this.name} used dragon dance!`); }
-moveFuncs.set("dragon dance", dragonDance);
-
-function extremeSpeed() { console.log(`${this.name} used extreme speed!`); }
-moveFuncs.set("extreme speed", extremeSpeed);
-
-function dragonClaw() { console.log(`${this.name} used dragon claw!`); }
-moveFuncs.set("dragon claw", dragonClaw);
-
-function psychic() { console.log(`${this.name} used psychic!`); }
-moveFuncs.set("psychic", psychic);
-
-function recover() { console.log(`${this.name} used recover!`); }
-moveFuncs.set("recover", recover);
-
-function thunderbolt() { console.log(`${this.name} used thunderbolt!`); }
+function thunderbolt(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "electric";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Thunderbolt", movePower, moveType, moveCategory, this, target);
+}
 moveFuncs.set("thunderbolt", thunderbolt);
 
-function alluringVoice() { console.log(`${this.name} used alluring voice!`); }
+function iceBeam(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "ice";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Ice Beam", movePower, moveType, moveCategory, this, target); 
+}
+moveFuncs.set("ice beam", iceBeam);
+
+function fireBlast(target, typeInteractions) {
+    const movePower = 110;
+    const moveType = "fire";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Fire Blast", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("fire blast", fireBlast);
+
+function flamethrower(target, typeInteractions) {
+    const movePower = 90;
+    const moveType = "fire";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Flamethrower", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("flamethrower", flamethrower);
+
+function solarBeam(target, typeInteractions) {
+    const movePower = 120;
+    const moveType = "grass";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Solar Beam", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("solar beam", solarBeam);
+
+function gigaDrain(target, typeInteractions) {
+    const movePower = 75;
+    const moveType = "grass";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Giga Drain", movePower, moveType, moveCategory, this, target, true);
+}
+moveFuncs.set("giga drain", gigaDrain);
+
+function hiddenPowerFire(target, typeInteractions) {
+    const movePower = 60;
+    const moveType = "fire";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Hidden Power Fire", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("hidden power fire", hiddenPowerFire);
+
+function scald(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "water";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Scald", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("scald", scald);
+
+function dragonPulse(target, typeInteractions) {
+    const movePower = 85;
+    const moveType = "dragon";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Dragon Pulse", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("dragon pulse", dragonPulse);
+
+function dragonClaw(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "dragon";
+    const moveCategory = "physical";
+    damagePhase(typeInteractions, "Dragon Claw", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("dragon claw", dragonClaw);
+
+function hurricane(target, typeInteractions) {
+    const movePower = 110;
+    const moveType = "flying";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Hurricane", movePower, moveType, moveCategory, this, target);
+}
+moveFuncs.set("hurricane", hurricane);
+
+function alluringVoice(target, typeInteractions) {
+    const movePower = 80;
+    const moveType = "fairy";
+    const moveCategory = "special";
+    damagePhase(typeInteractions, "Alluring Voice", movePower, moveType, moveCategory, this, target);
+}
 moveFuncs.set("alluring voice", alluringVoice);
 
-function hyperBeam() { console.log(`${this.name} used hyper beam!`); }
-moveFuncs.set("hyper beam", hyperBeam);
+function roost() {
+    const healAmount = Math.floor(this.hp / 2);
+    if ( (this.currentHp + healAmount) > this.hp) {
+        this.currentHp = this.hp;
+        console.log(`${sentenceCase(this.name)} used Roost! It healed to full HP!`);
+        return;
+    }
+    this.currentHp += healAmount;
+    console.log(`${sentenceCase(this.name)} used Roost! It healed for ${healAmount} HP!`); 
+}
+moveFuncs.set("roost", roost);
 
-function hurricane() { console.log(`${this.name} used hurricane!`); }
-moveFuncs.set("hurricane", hurricane);
+function recover() { 
+    const healAmount = Math.floor(this.hp / 2);
+    if ( (this.currentHp + healAmount) > this.hp) {
+        this.currentHp = this.hp;
+        console.log(`${sentenceCase(this.name)} used Recover! It healed to full HP!`);
+        return;
+    }
+    this.currentHp += healAmount;
+    console.log(`${sentenceCase(this.name)} used Recover! It healed for ${healAmount} HP!`); 
+}
+moveFuncs.set("recover", recover);
+
+function growth() {
+    const attackAmount = Math.floor(this.attack / 2);
+    const spAttackAmount = Math.floor(this.spAttack / 2);
+    this.currentAttack += attackAmount;
+    this.currentSpAttack += spAttackAmount;
+
+    console.log(`${sentenceCase(this.name)} used Growth! It increased it's Attack and Special Attack by 50% of base!`); 
+}
+moveFuncs.set("growth", growth);
+
+function dragonDance() {
+    const attackAmount = Math.floor(this.attack / 2);
+    const speedAmount = Math.floor(this.speed / 2);
+    this.currentAttack += attackAmount;
+    this.currentSpeed += speedAmount;
+    console.log(`${sentenceCase(this.name)} used Dragon Dance! It increased it's Attack and Speed by 50% of base!`); 
+}
+moveFuncs.set("dragon dance", dragonDance);

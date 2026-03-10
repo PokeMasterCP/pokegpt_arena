@@ -31,10 +31,26 @@ export class Battle {
     }
 
     takeTurn(first, second) {
+        // Temporary randomness until AI
+        const selection = Math.floor(Math.random() * 4) + 1;
+        //
+
         console.log(`\nTurn: ${this.turn}`);
-        first.move1(second, this.typeInteractions);
+
+        if (first.resting > 0) {
+            console.log(`${sentenceCase(first.name)} is resting this turn!`);
+            first.resting--;
+        } else {
+            first.useMove(selection, second, this.typeInteractions);
+        }
+        
         if (second.currentHp > 0) {
-            second.move4(first, this.typeInteractions);
+            if (second.resting > 0) {
+                console.log(`${sentenceCase(second.name)} is resting this turn!`);
+                second.resting--;
+            } else {
+                second.useMove(selection, first, this.typeInteractions);
+            }
         }
 
         this.afterTurnReport();
@@ -50,8 +66,10 @@ export class Battle {
             this.winner = this.playerOne;
             return;
         }
-
-        console.log(`${sentenceCase(this.playerOne.name)}: ${this.playerOne.currentHp}/${this.playerOne.hp} || ${sentenceCase(this.playerTwo.name)}: ${this.playerTwo.currentHp}/${this.playerTwo.hp}`);
+        
+        const userHpUpdate = `${sentenceCase(this.playerOne.name)}: ${this.playerOne.currentHp}/${this.playerOne.hp}`;
+        const targetHpUpdate = `${sentenceCase(this.playerTwo.name)}: ${this.playerTwo.currentHp}/${this.playerTwo.hp}`;
+        console.log(`${userHpUpdate} || ${targetHpUpdate}`);
         this.turn++;
         this.findTurnOrder();
     }
