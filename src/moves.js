@@ -3,13 +3,12 @@ import { sentenceCase } from "./tools/helper.js";
 
 export const moveFuncs = new Map();
 
-function crunch(target, typeInteractions) {
-    const movePower = 80;
-    const moveType = "dark";
-    const moveCategory = "physical";
-    damagePhase(typeInteractions, "Crunch", movePower, moveType, moveCategory, this, target); 
+function rest(target, typeInteractions) {
+    this.currentHp = this.hp;
+    this.resting += 2;
+    console.log(`${sentenceCase(this.name)} used Rest! It healed HP to full and is now asleep!`);
 }
-moveFuncs.set("crunch", crunch);
+moveFuncs.set("rest", rest);
 
 function bodySlam(target, typeInteractions) {
     const movePower = 85;
