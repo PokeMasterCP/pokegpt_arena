@@ -74,13 +74,15 @@ export async function choosePokemon(playerOnePick, playerTwoPick) {
   const rawContent = await readFile("./src/data/movesets.json", "utf-8");
   const pokemonMap = new Map(Object.entries(JSON.parse(rawContent)));
 
-  const playerOneMoves = pokemonMap.get(playerOnePick).map(move => moveFuncs.get(move));
+  const playerOneMoveNames = pokemonMap.get(playerOnePick);
+  const playerOneMoves = playerOneMoveNames.map(move => moveFuncs.get(move));
   const playerOneData = await getPokeData(playerOnePick);
-  const playerOne = new Pokemon(playerOnePick, playerOneData, playerOneMoves);
+  const playerOne = new Pokemon(playerOnePick, playerOneData, playerOneMoves, playerOneMoveNames);
 
-  const playerTwoMoves = pokemonMap.get(playerTwoPick).map(move => moveFuncs.get(move));
+  const playerTwoMoveNames = pokemonMap.get(playerOnePick);
+  const playerTwoMoves = playerTwoMoveNames.map(move => moveFuncs.get(move));
   const playerTwoData = await getPokeData(playerTwoPick);
-  const playerTwo = new Pokemon(playerTwoPick, playerTwoData, playerTwoMoves);
+  const playerTwo = new Pokemon(playerTwoPick, playerTwoData, playerTwoMoves, playerTwoMoveNames);
 
   return [playerOne, playerTwo];
 }

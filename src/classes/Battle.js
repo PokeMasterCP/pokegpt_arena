@@ -1,62 +1,76 @@
 import { sentenceCase } from "../tools/helper.js";
 
 export class Battle {
-    constructor(pokemon1, pokemon2, typeInteractions) {
+    constructor(trainerOne, pokemon1, trainerTwo, pokemon2, typeInteractions) {
         this.turn = 1;
+
+        this.trainerOne = trainerOne;
+        this.trainerOneChoice = null;
+
+        this.trainerTwo = trainerTwo;
+        this.trainerTwoChoice = null;
+
         this.playerOne = pokemon1;
         this.playerTwo = pokemon2;
+
         this.winner = null;
         this.typeInteractions = typeInteractions;
     }
 
+    broadcast(message) {
+        console.log(message);
+        this.trainerOne.queueMessage(`${message}\n`);
+        this.trainerTwo.queueMessage(`${message}\n`);
+    }
+
     findTurnOrder() {
         if (this.playerOne.speed > this.playerTwo.speed) {
-            this.takeTurn(this.playerOne, this.playerTwo);
+            this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice);
         }
 
         if (this.playerOne.speed < this.playerTwo.speed) {
-            this.takeTurn(this.playerTwo, this.playerOne);
+            this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
         }
         // In case of a speed tie, randomly choose order
         if (this.playerOne.speed === this.playerTwo.speed) {
             const ranNum = Math.random();
-            ranNum > 0.5 ? this.takeTurn(this.playerOne, this.playerTwo) : this.takeTurn(this.playerTwo, this.playerOne);
+            ranNum > 0.5 ? this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice) : this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
         }
     }
 
-    startBattle() {
-        console.log(`Starting battle between ${sentenceCase(this.playerOne.name)} and ${sentenceCase(this.playerTwo.name)}!`);
+    async startBattle() {
+        this.broadcast(`Starting battle between Player One: ${sentenceCase(this.trainerOne.modelName)} and Player Two: ${sentenceCase(this.trainerTwo.modelName)}`);
+        this.broadcast(`Player One has chosen: ${sentenceCase(this.playerOne.name)} and Player Two has chosen: ${sentenceCase(this.playerTwo.name)}!`);
+        this.broadcast("Respond with your desired move to begin the battle!\n");
+
+        this.trainerOneChoice = await this.trainerOne.sendMessage();
+        this.trainerTwoChoice = await this.trainerTwo.sendMessage(); 
         this.findTurnOrder();
-        console.log(`\n${sentenceCase(this.winner.name)} has won!!`);
     }
 
-    takeTurn(first, second) {
-        // Temporary randomness until AI
-        const selection = Math.floor(Math.random() * 4) + 1;
-        //
-
-        console.log(`\nTurn: ${this.turn}`);
+    takeTurn(first, firstChoice, second, secondChoice) {
+        this.broadcast(`\nTurn: ${this.turn}`);
 
         if (first.resting > 0) {
-            console.log(`${sentenceCase(first.name)} is resting this turn!`);
+            this.broadcast(`${sentenceCase(first.name)} is resting this turn!`);
             first.resting--;
         } else {
-            first.useMove(selection, second, this.typeInteractions);
+            first.useMove(firstChoice, second, this);
         }
         
         if (second.currentHp > 0) {
             if (second.resting > 0) {
-                console.log(`${sentenceCase(second.name)} is resting this turn!`);
+                this.broadcast(`${sentenceCase(second.name)} is resting this turn!`);
                 second.resting--;
             } else {
-                second.useMove(selection, first, this.typeInteractions);
+                second.useMove(secondChoice, first, this);
             }
         }
 
         this.afterTurnReport();
     }
 
-    afterTurnReport() {
+    async afterTurnReport() {
         if (this.playerOne.currentHp <= 0) {
             this.winner = this.playerTwo;
             return;
@@ -69,8 +83,10 @@ export class Battle {
         
         const userHpUpdate = `${sentenceCase(this.playerOne.name)}: ${this.playerOne.currentHp}/${this.playerOne.hp}`;
         const targetHpUpdate = `${sentenceCase(this.playerTwo.name)}: ${this.playerTwo.currentHp}/${this.playerTwo.hp}`;
-        console.log(`${userHpUpdate} || ${targetHpUpdate}`);
+        this.broadcast(`${userHpUpdate} || ${targetHpUpdate}`);
         this.turn++;
+        await this.trainerOne.sendMessage();
+        await this.trainerTwo.sendMessage();
         this.findTurnOrder();
     }
 }

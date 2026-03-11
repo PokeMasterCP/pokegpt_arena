@@ -34,36 +34,37 @@ function getStatMultiplier(moveCategory, user, target) {
     }
 }
 
-function damageReport(moveName, typeMultiple, criticalMultiple, damage, user, target) {
+function damageReport(battle, moveName, typeMultiple, criticalMultiple, damage, user, target) {
     const userName = sentenceCase(user.name);
     const targetName = sentenceCase(target.name);
 
     if (typeMultiple === 0) {
-        console.log(`${userName} used ${moveName} but ${targetName} was immune!!`);
+        battle.broadcast(`${userName} used ${moveName} but ${targetName} was immune!!`);
         return;
     }
 
     if (criticalMultiple > 1) {
-        console.log("Critical Hit!!!");
+        battle.broadcast("Critical Hit!!!");
     }
 
     if (typeMultiple > 1) {
-        console.log(`${userName} used ${moveName} and it was Super Effective!! Dealt ${damage} damage to ${targetName}`);
+        battle.broadcast(`${userName} used ${moveName} and it was Super Effective!! Dealt ${damage} damage to ${targetName}`);
         return;
     }
 
     if (typeMultiple < 1) {
-        console.log(`${userName} used ${moveName} but it was resisted! Dealt ${damage} damage to ${targetName}`);
+        battle.broadcast(`${userName} used ${moveName} but it was resisted! Dealt ${damage} damage to ${targetName}`);
         return;
     }
 
-    console.log(`${userName} used ${moveName}! Dealt ${damage} to ${targetName}`);
+    battle.broadcast(`${userName} used ${moveName}! Dealt ${damage} to ${targetName}`);
 
 
 
 }
 
-export function damagePhase(typeInteractions, moveName, movePower, moveType, moveCategory, user, target, healing=false) {
+export function damagePhase(battle, moveName, movePower, moveType, moveCategory, user, target, healing=false) {
+    const typeInteractions = battle.typeInteractions;
     let typeMultiple = getTypeMultiplier(moveType, target.primaryType, typeInteractions);
     if (target.secondaryType) {
         typeMultiple *= getTypeMultiplier(moveType, target.secondaryType, typeInteractions);
@@ -82,15 +83,15 @@ export function damagePhase(typeInteractions, moveName, movePower, moveType, mov
     damage = Math.floor(damage * typeMultiple);
     target.currentHp -= damage;
 
-    damageReport(moveName, typeMultiple, criticalMultiple, damage, user, target);
+    damageReport(battle, moveName, typeMultiple, criticalMultiple, damage, user, target);
     if (healing) {
         if ( (user.currentHp + Math.floor(damage / 2)) > user.hp ) {
             user.currentHp = user.hp;
-            console.log(`${sentenceCase(user.name)} has healed to full HP!`);
+            battle.broadcast(`${sentenceCase(user.name)} has healed to full HP!`);
         } else {
             const healAmount = Math.floor(damage / 2);
             user.currentHp += healAmount;
-            console.log(`${sentenceCase(user.name)} has healed ${healAmount} HP!`);
+            battle.broadcast(`${sentenceCase(user.name)} has healed ${healAmount} HP!`);
         }
     }
 }

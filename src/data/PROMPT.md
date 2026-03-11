@@ -115,3 +115,8 @@ Some moves cause the user to "rest" (lose turns). After using Giga Impact, Hyper
 
 **Choose wisely — you can only pick one partner for the entire battle.**
 **Respond with only a JSON object with a single key selection containing the name of your Pokemon choice or move choice.**
+
+**Response Format**
+{
+    "choice": choice
+}
