@@ -79,7 +79,7 @@ export async function choosePokemon(playerOnePick, playerTwoPick) {
   const playerOneData = await getPokeData(playerOnePick);
   const playerOne = new Pokemon(playerOnePick, playerOneData, playerOneMoves, playerOneMoveNames);
 
-  const playerTwoMoveNames = pokemonMap.get(playerOnePick);
+  const playerTwoMoveNames = pokemonMap.get(playerTwoPick);
   const playerTwoMoves = playerTwoMoveNames.map(move => moveFuncs.get(move));
   const playerTwoData = await getPokeData(playerTwoPick);
   const playerTwo = new Pokemon(playerTwoPick, playerTwoData, playerTwoMoves, playerTwoMoveNames);

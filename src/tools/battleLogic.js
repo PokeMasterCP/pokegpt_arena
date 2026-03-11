@@ -26,11 +26,11 @@ function getCriticalMultiplier() {
 
 function getStatMultiplier(moveCategory, user, target) {
     if (moveCategory === "physical") {
-        return user.attack / target.defense;
+        return user.currentAttack / target.currentDefense;
     }
 
     if (moveCategory === "special") {
-        return (user.spAttack / target.spDefense);
+        return (user.currentSpAttack / target.currentSpDefense);
     }
 }
 
@@ -63,7 +63,7 @@ function damageReport(battle, moveName, typeMultiple, criticalMultiple, damage, 
 
 }
 
-export function damagePhase(battle, moveName, movePower, moveType, moveCategory, user, target, healing=false) {
+export function damagePhase(battle, moveName, movePower, moveType, moveCategory, user, target, healing=false, recoilPercent=0) {
     const typeInteractions = battle.typeInteractions;
     let typeMultiple = getTypeMultiplier(moveType, target.primaryType, typeInteractions);
     if (target.secondaryType) {
@@ -93,5 +93,11 @@ export function damagePhase(battle, moveName, movePower, moveType, moveCategory,
             user.currentHp += healAmount;
             battle.broadcast(`${sentenceCase(user.name)} has healed ${healAmount} HP!`);
         }
+    }
+
+    if (recoilPercent > 0) {
+        const recoilDamage = Math.floor(damage * recoilPercent);
+        user.currentHp = Math.max(1, user.currentHp - recoilDamage);
+        battle.broadcast(`${sentenceCase(user.name)} took ${recoilDamage} HP in recoil!`);
     }
 }

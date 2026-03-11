@@ -18,6 +18,7 @@ export class Trainer {
         const completion = await this.model.chat.completions.create({
             model: this.modelName,
             messages: this.messageHistory,
+            temperature: 0.7, // Reduces the deterministic nature of AI since they kept defaulting to the same Pokemon choices
             response_format: {
                 type: 'json_object',
                 json_schema: {

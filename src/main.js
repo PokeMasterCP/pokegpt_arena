@@ -15,7 +15,11 @@ function generateAITrainer(modelName) {
     });
 
     return new Trainer(modelName, model);
+}
 
+function getRandomSubset(array, size) {
+    const shuffled = [...array].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, size);
 }
 
 async function main() {
@@ -29,12 +33,22 @@ async function main() {
                                                                                                      `);
    
     const prompt = await readFile("./src/data/PROMPT.md", "utf-8");
+    const rawMovesets = await readFile("./src/data/movesets.json", "utf-8");
+    const allPokemon = Object.keys(JSON.parse(rawMovesets));
     const typeInteractions = await getTypeInteractions();
     const trainerOne = generateAITrainer(process.env.MODEL_1);
     const trainerTwo = generateAITrainer(process.env.MODEL_2);
-    console.log(`${sentenceCase(trainerOne.modelName)} VS ${sentenceCase(trainerTwo.modelName)}! The trainers are choosing their Pokemon.`);
-    trainerOne.queueMessage(prompt);
-    trainerTwo.queueMessage(prompt);
+    console.log(`${sentenceCase(trainerOne.modelName)} VS ${sentenceCase(trainerTwo.modelName)}! The trainers are choosing their Pokemon.\n`);
+
+    const sampleSize = 8;
+    const trainerOneOptions = getRandomSubset(allPokemon, sampleSize);
+    const trainerTwoOptions = getRandomSubset(allPokemon, sampleSize);
+
+    const optionsMessage = (options) =>
+        `\n\n## Your Available Pokémon\nYou MUST choose from the following Pokémon only: ${options.map(option => sentenceCase(option)).join(", ")}.\nYour opponent has a different random selection, so study the full roster above to understand what you might face.`;
+
+    trainerOne.queueMessage(prompt + optionsMessage(trainerOneOptions));
+    trainerTwo.queueMessage(prompt + optionsMessage(trainerTwoOptions));
     const trainerOnePick = await trainerOne.sendMessage();
     const trainerTwoPick = await trainerTwo.sendMessage();
 

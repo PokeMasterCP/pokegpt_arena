@@ -13,7 +13,6 @@ export class Battle {
         this.playerOne = pokemon1;
         this.playerTwo = pokemon2;
 
-        this.winner = null;
         this.typeInteractions = typeInteractions;
     }
 
@@ -24,15 +23,15 @@ export class Battle {
     }
 
     findTurnOrder() {
-        if (this.playerOne.speed > this.playerTwo.speed) {
+        if (this.playerOne.currentSpeed > this.playerTwo.currentSpeed) {
             this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice);
         }
 
-        if (this.playerOne.speed < this.playerTwo.speed) {
+        if (this.playerOne.currentSpeed < this.playerTwo.currentSpeed) {
             this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
         }
         // In case of a speed tie, randomly choose order
-        if (this.playerOne.speed === this.playerTwo.speed) {
+        if (this.playerOne.currentSpeed === this.playerTwo.currentSpeed) {
             const ranNum = Math.random();
             ranNum > 0.5 ? this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice) : this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
         }
@@ -72,12 +71,12 @@ export class Battle {
 
     async afterTurnReport() {
         if (this.playerOne.currentHp <= 0) {
-            this.winner = this.playerTwo;
+            console.log(`${sentenceCase(this.trainerTwo.modelName)} has won the battle with ${sentenceCase(this.playerOne.name)}!!`);
             return;
         }
 
         if (this.playerTwo.currentHp <= 0) {
-            this.winner = this.playerOne;
+            console.log(`\n${sentenceCase(this.trainerOne.modelName)} has won the battle with ${sentenceCase(this.playerOne.name)}!!`);
             return;
         }
         
@@ -85,10 +84,11 @@ export class Battle {
         const targetHpUpdate = `${sentenceCase(this.playerTwo.name)}: ${this.playerTwo.currentHp}/${this.playerTwo.hp}`;
         this.broadcast(`${userHpUpdate} || ${targetHpUpdate}`);
         this.turn++;
-        await this.trainerOne.sendMessage();
-        await this.trainerTwo.sendMessage();
+        this.trainerOneChoice = await this.trainerOne.sendMessage();
+        this.trainerTwoChoice = await this.trainerTwo.sendMessage();
         this.findTurnOrder();
     }
+
 }
 
 
