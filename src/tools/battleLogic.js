@@ -44,7 +44,7 @@ function damageReport(moveName, typeMultiple, criticalMultiple, damage, user, ta
     }
 
     if (criticalMultiple > 1) {
-        console.log("Critical Hit!!!\n");
+        console.log("Critical Hit!!!");
     }
 
     if (typeMultiple > 1) {

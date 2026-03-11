@@ -13,5 +13,9 @@
   "type": "module",
   "devDependencies": {
     "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "openai": "^6.27.0"
   }
 }

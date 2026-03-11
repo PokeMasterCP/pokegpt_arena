@@ -1,5 +1,5 @@
-import { damagePhase } from "./tools/battleLogic.js";
-import { sentenceCase } from "./tools/helper.js";
+import { damagePhase } from "../tools/battleLogic.js";
+import { sentenceCase } from "../tools/helper.js";
 
 export const moveFuncs = new Map();
 
