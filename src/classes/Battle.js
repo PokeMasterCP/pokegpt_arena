@@ -25,13 +25,10 @@ export class Battle {
     findTurnOrder() {
         if (this.playerOne.currentSpeed > this.playerTwo.currentSpeed) {
             this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice);
-        }
-
-        if (this.playerOne.currentSpeed < this.playerTwo.currentSpeed) {
+        } else if (this.playerOne.currentSpeed < this.playerTwo.currentSpeed) {
             this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
-        }
+        } else if (this.playerOne.currentSpeed === this.playerTwo.currentSpeed) {
         // In case of a speed tie, randomly choose order
-        if (this.playerOne.currentSpeed === this.playerTwo.currentSpeed) {
             const ranNum = Math.random();
             ranNum > 0.5 ? this.takeTurn(this.playerOne, this.trainerOneChoice, this.playerTwo, this.trainerTwoChoice) : this.takeTurn(this.playerTwo, this.trainerTwoChoice, this.playerOne, this.trainerOneChoice);
         }
@@ -71,7 +68,7 @@ export class Battle {
 
     async afterTurnReport() {
         if (this.playerOne.currentHp <= 0) {
-            console.log(`${sentenceCase(this.trainerTwo.modelName)} has won the battle with ${sentenceCase(this.playerOne.name)}!!`);
+            console.log(`${sentenceCase(this.trainerTwo.modelName)} has won the battle with ${sentenceCase(this.playerTwo.name)}!!`);
             return;
         }
 

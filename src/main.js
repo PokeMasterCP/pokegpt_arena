@@ -56,7 +56,6 @@ async function main() {
     const battle = new Battle(trainerOne, chosenPokemon[0], trainerTwo, chosenPokemon[1], typeInteractions);
     
     battle.startBattle();
-    //Read chat, seems like we forgot to update move selection from numbers to strings. 
 }
 
 

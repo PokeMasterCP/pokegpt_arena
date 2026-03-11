@@ -3,12 +3,7 @@ import { sentenceCase } from "../tools/helper.js";
 
 export const moveFuncs = new Map();
 
-function rest(target, battle) {
-    this.currentHp = this.hp;
-    this.resting += 2;
-    battle.broadcast(`${sentenceCase(this.name)} used Rest! It healed HP to full and is now asleep!`);
-}
-moveFuncs.set("rest", rest);
+// Damaging Moves 
 
 function bodySlam(target, battle) {
     const movePower = 85;
@@ -212,7 +207,16 @@ function alluringVoice(target, battle) {
 }
 moveFuncs.set("alluring voice", alluringVoice);
 
-function roost(target, battle) {
+// Non Damaging Moves 
+
+function rest(battle) {
+    this.currentHp = this.hp;
+    this.resting += 2;
+    battle.broadcast(`${sentenceCase(this.name)} used Rest! It healed HP to full and is now asleep!`);
+}
+moveFuncs.set("rest", rest);
+
+function roost(battle) {
     const healAmount = Math.floor(this.hp / 2);
     if ( (this.currentHp + healAmount) > this.hp) {
         this.currentHp = this.hp;
@@ -224,7 +228,7 @@ function roost(target, battle) {
 }
 moveFuncs.set("roost", roost);
 
-function recover(target, battle) { 
+function recover(battle) { 
     const healAmount = Math.floor(this.hp / 2);
     if ( (this.currentHp + healAmount) > this.hp) {
         this.currentHp = this.hp;
@@ -236,7 +240,13 @@ function recover(target, battle) {
 }
 moveFuncs.set("recover", recover);
 
-function growth(target, battle) {
+function growth(battle) {
+    const maxAttack = this.attack * 4;
+    const maxSpAttack = this.spAttack * 4;
+    if(this.currentAttack >= maxAttack || this.currentSpAttack >= maxSpAttack) {
+        battle.broadcast(`${sentenceCase(this.name)} used Growth! It had no effect since Attack and/or Special Attack are at max!`);
+        return;
+    }
     const attackAmount = Math.floor(this.attack / 2);
     const spAttackAmount = Math.floor(this.spAttack / 2);
     this.currentAttack += attackAmount;
@@ -246,7 +256,14 @@ function growth(target, battle) {
 }
 moveFuncs.set("growth", growth);
 
-function dragonDance(target, battle) {
+function dragonDance(battle) {
+    const maxAttack = this.attack * 4;
+    const maxSpeed = this.speed * 4;
+    if(this.currentAttack >= maxAttack || this.currentSpeed >= maxSpeed) {
+        battle.broadcast(`${sentenceCase(this.name)} used Dragon Dance! It had no effect since Attack and/or Speed are at max!`);
+        return;
+    }
+
     const attackAmount = Math.floor(this.attack / 2);
     const speedAmount = Math.floor(this.speed / 2);
     this.currentAttack += attackAmount;
@@ -279,7 +296,12 @@ function flashCannon(target, battle) {
 }
 moveFuncs.set("flash cannon", flashCannon);
 
-function ironDefense(target, battle) {
+function ironDefense(battle) {
+    const maxDefense = this.defense * 4;
+    if(this.currentDefense >= maxDefense) {
+        battle.broadcast(`${sentenceCase(this.name)} used Iron Defense! It had no effect since Defense is at max!`);
+        return;
+    }
     const defenseAmount = Math.floor(this.defense);
     this.currentDefense += defenseAmount;
     battle.broadcast(`${sentenceCase(this.name)} used Iron Defense! It sharply raised it's Defense!`);
@@ -310,7 +332,12 @@ function darkPulse(target, battle) {
 }
 moveFuncs.set("dark pulse", darkPulse);
 
-function nastyPlot(target, battle) {
+function nastyPlot(battle) {
+    const maxSpAttack = this.spAttack * 4;
+    if(this.currentSpAttack >= maxSpAttack) {
+        battle.broadcast(`${sentenceCase(this.name)} used Nasty Plot! It had no effect since Special Attack is at max!`);
+        return;
+    }
     const spAttackAmount = Math.floor(this.spAttack);
     this.currentSpAttack += spAttackAmount;
     battle.broadcast(`${sentenceCase(this.name)} used Nasty Plot! It sharply raised it's Special Attack!`);
@@ -422,7 +449,7 @@ function dazzlingGleam(target, battle) {
 }
 moveFuncs.set("dazzling gleam", dazzlingGleam);
 
-function moonlight(target, battle) {
+function moonlight(battle) {
     const healAmount = Math.floor(this.hp / 2);
     if ( (this.currentHp + healAmount) > this.hp) {
         this.currentHp = this.hp;
@@ -471,6 +498,13 @@ function closeCombat(target, battle) {
     const moveType = "fighting";
     const moveCategory = "physical";
     damagePhase(battle, "Close Combat", movePower, moveType, moveCategory, this, target);
+
+    const minDefense = Math.floor(this.defense / 4);
+    const minSpDefense = Math.floor(this.spDefense / 4);
+    if (this.currentSpDefense <= minSpDefense || this.currentDefense <= minDefense) {
+        battle.broadcast(`${sentenceCase(this.name)}'s Defense and Special Defense can't go lower!`);
+        return;
+    }
     this.currentDefense -= Math.floor(this.defense / 2);
     this.currentSpDefense -= Math.floor(this.spDefense / 2);
     battle.broadcast(`${sentenceCase(this.name)}'s Defense and Special Defense fell!`);
@@ -485,7 +519,13 @@ function drainPunch(target, battle) {
 }
 moveFuncs.set("drain punch", drainPunch);
 
-function bulkUp(target, battle) {
+function bulkUp(battle) {
+    const maxAttack = this.attack * 4;
+    const maxDefense = this.defense * 4;
+    if(this.currentAttack >= maxAttack || this.currentDefense >= maxDefense) {
+        battle.broadcast(`${sentenceCase(this.name)} used Bulk Up! It had no effect since Attack and/or Defense are at max!`);
+        return;
+    }
     const attackAmount = Math.floor(this.attack / 2);
     const defenseAmount = Math.floor(this.defense / 2);
     this.currentAttack += attackAmount;
@@ -567,7 +607,7 @@ function hornLeech(target, battle) {
 }
 moveFuncs.set("horn leech", hornLeech);
 
-function synthesis(target, battle) {
+function synthesis(battle) {
     const healAmount = Math.floor(this.hp / 2);
     if ( (this.currentHp + healAmount) > this.hp) {
         this.currentHp = this.hp;
@@ -617,6 +657,12 @@ function dracoMeteor(target, battle) {
     const moveType = "dragon";
     const moveCategory = "special";
     damagePhase(battle, "Draco Meteor", movePower, moveType, moveCategory, this, target);
+
+    const minSpAttack = Math.floor(this.spAttack / 4);
+    if (this.currentSpAttack <= minSpAttack) {
+        battle.broadcast(`${sentenceCase(this.name)}'s Special Attack can't go any lower!`);
+        return;
+    }
     this.currentSpAttack -= Math.floor(this.spAttack);
     battle.broadcast(`${sentenceCase(this.name)}'s Special Attack sharply fell!`);
 }
@@ -630,14 +676,19 @@ function facade(target, battle) {
 }
 moveFuncs.set("facade", facade);
 
-function swordsDance(target, battle) {
+function swordsDance(battle) {
+    const maxAttack = this.attack * 4;
+    if(this.currentAttack >= maxAttack) {
+        battle.broadcast(`${sentenceCase(this.name)} used Swords Dance! It had no effect since Attack is at max!`);
+        return;
+    }
     const attackAmount = Math.floor(this.attack);
     this.currentAttack += attackAmount;
     battle.broadcast(`${sentenceCase(this.name)} used Swords Dance! It sharply raised it's Attack!`);
 }
 moveFuncs.set("swords dance", swordsDance);
 
-function slackOff(target, battle) {
+function slackOff(battle) {
     const healAmount = Math.floor(this.hp / 2);
     if ( (this.currentHp + healAmount) > this.hp) {
         this.currentHp = this.hp;
@@ -658,6 +709,12 @@ function psyshock(target, battle) {
 moveFuncs.set("psyshock", psyshock);
 
 function calmMind(target, battle) {
+    const maxSpDefense = this.spDefense * 4;
+    const maxSpAttack = this.spAttack * 4;
+    if(this.currentSpDefense >= maxSpDefense || this.currentSpAttack >= maxSpAttack) {
+        battle.broadcast(`${sentenceCase(this.name)} used Calm Mind! It had no effect since Special Attack and/or Special Defense are at max!`);
+        return;
+    }
     const spAttackAmount = Math.floor(this.spAttack / 2);
     const spDefenseAmount = Math.floor(this.spDefense / 2);
     this.currentSpAttack += spAttackAmount;
