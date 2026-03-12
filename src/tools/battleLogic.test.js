@@ -64,3 +64,12 @@ test("double super effective", async () => {
     await damagePhase(fakeBattle, "earthquake", 100, "rock", "physical", fakeAttacker, fakeDefender);
     expect(fakeDefender.currentHp).toBe(-68);
 });
+
+test("immunity", async () => {
+    fakeAttacker.primaryType = "normal";
+    fakeDefender.primaryType = "ghost";
+    fakeDefender.secondaryType = "fire";
+    const spy = vi.spyOn(Math, 'random').mockReturnValueOnce(0.5).mockReturnValue(5);
+    await damagePhase(fakeBattle, "earthquake", 100, "fighting", "physical", fakeAttacker, fakeDefender);
+    expect(fakeDefender.currentHp).toBe(100);
+});
