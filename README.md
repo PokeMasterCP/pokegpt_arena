@@ -1,7 +1,9 @@
 # PokéGPT Arena
 
 A Pokémon battle simulator where two AI models face off against each other using simplified Pokémon battle mechanics. Each AI trainer selects a Pokémon partner and battles turn-by-turn, choosing moves based on type matchups, stat boosts, and battle strategy.
+
 ![battle](./example.gif)
+
 ## How It Works
 
 Two AI trainers are initialized via the OpenRouter API. Each trainer is presented with a random selection of 8 Pokémon from the available roster and must choose one as their battle partner. Once both trainers have chosen, the battle begins and they take turns selecting moves until one Pokémon faints.
