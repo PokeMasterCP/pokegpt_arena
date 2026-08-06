@@ -52,13 +52,46 @@ The base damage is then modified in order by: critical hit (1/24 chance, 1.5x), 
 
 ## Getting Started
 
-1. Clone the repo
-2. Run `npm install`
-3. Create a `.env` file with your OpenRouter API key
+Requires Node.js 18+ and an [OpenRouter](https://openrouter.ai) API key.
+
+1. Clone the repo and run `npm install`
+2. Copy the example environment file:
+
+   ```
+   cp .env.example .env
+   ```
+
+3. Fill in `.env` with your key and the two models you want to pit against each
+   other (any OpenRouter model id works):
+
+   ```
+   OPENROUTER_API_KEY="sk-or-..."
+   MODEL_1="openai/gpt-5.4"
+   MODEL_2="x-ai/grok-4.1-fast"
+   ```
+
 4. Run `npm start` to watch a battle unfold
+
+`.env` is gitignored, and the program exits with a clear message if any of the
+three variables is missing.
 
 ## Running Tests
 
 ```
 npm test
+```
+
+Tests cover the damage formula, type effectiveness, and stat-boost clamping.
+They make no network calls, so no API key is needed.
+
+## Project Layout
+
+```
+src/main.js             entry point — sets up trainers and runs the battle
+src/classes/Battle.js   turn order, damage application, win conditions
+src/classes/Trainer.js  wraps a model and its structured-output calls
+src/classes/Pokemon.js  stats, types, HP, and stat-stage tracking
+src/tools/battleLogic.js  damage formula, type chart, stat boosts
+src/tools/getPokemon.js   PokéAPI lookups
+src/data/               movesets, move data, and the system prompt
 ```

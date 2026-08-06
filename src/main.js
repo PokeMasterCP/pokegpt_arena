@@ -6,8 +6,17 @@ import { readFile } from "node:fs/promises"
 import { Trainer } from "./classes/Trainer.js"
 import { sentenceCase } from "./tools/helper.js";
 
+function requireEnv(name) {
+    const value = process.env[name];
+    if (!value) {
+        console.error(`${name} is not set. Copy .env.example to .env and fill it in.`);
+        process.exit(1);
+    }
+    return value;
+}
+
 function generateAITrainer(modelName) {
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = requireEnv("OPENROUTER_API_KEY");
     const model = new OpenAI({
         baseURL: 'https://openrouter.ai/api/v1',
         apiKey: apiKey,
@@ -36,8 +45,8 @@ async function main() {
     const rawMovesets = await readFile("./src/data/movesets.json", "utf-8");
     const allPokemon = Object.keys(JSON.parse(rawMovesets));
     const typeInteractions = await getTypeInteractions();
-    const trainerOne = generateAITrainer(process.env.MODEL_1);
-    const trainerTwo = generateAITrainer(process.env.MODEL_2);
+    const trainerOne = generateAITrainer(requireEnv("MODEL_1"));
+    const trainerTwo = generateAITrainer(requireEnv("MODEL_2"));
     console.log(`${sentenceCase(trainerOne.modelName)} VS ${sentenceCase(trainerTwo.modelName)}! The trainers are choosing their Pokemon.\n`);
 
     const sampleSize = 8;
